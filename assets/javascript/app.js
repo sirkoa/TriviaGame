@@ -5,26 +5,49 @@ $(document).ready(function () {
   var answerBank = [];
   var gameInterval;
   var timeLeft = 500;
-  var correct = 0
-  var incorrect = 0
+  var correct = 0;
+  var incorrect = 0;
 
   function newGame() {
+    clearInterval(gameInterval)
+    $("#answer").empty()
+    $("#incorrectanswer").empty()
+    $(".questions").empty();
+    $(".form-element").show();
     answerBank = [];
+    correct = 0;
+    incorrect = 0;
     timeLeft = 500;
     gameInterval = setInterval(function () {
+
       timeLeft--;
       $(".timer-div").text("Time left is: " + timeLeft);
+
+      if (timeLeft <= 0) {
+        clearInterval(gameInterval)
+        displayResults();
+      }
     }, 1000);
 
     questions = [{
-        question: "question 1 name",
-        answer: "etc",
-        choices: ["answer 1", "answer 2", "etc"]
+        question: "Which of the following items was owned by the fewest U.S. homes in 1990?",
+        answer: "CD player",
+        choices: ["home computer", "CD player", "cordless phone", "dishwasher"]
       },
       {
-        question: "question 2 name",
-        answer: "question 2 answer",
-        choices: ["answer 1", "answer 2", "etc"]
+        question: "The Brownie Box Camera introduced by Eastman Kodak in 1900 had a retail price of what?",
+        answer: "$1",
+        choices: ["$1", "$5", "$10", "$20"]
+      },
+      {
+        question: "During the 1980s for six consecutive years what breed of dog was the most popular in the U.S.?",
+        answer:"cocker spaniel",
+        choices: ["poodle", "German shepard", "Labrador retriever", "cocker spaniel"]
+      },
+      {
+        question:"Which of the following rivers is the longest?",
+        answer:"Congo River",
+        choices:["Congo River","Lena River", "Niger River", "Irtysh River"]
       }
     ]
 
@@ -92,28 +115,37 @@ $(document).ready(function () {
 
     e.preventDefault();
 
-    for (var i = 0; i < questions.length; i++) {
-      var answer = $('input[type="radio"][name=' + i + ']:checked').attr("data-answer");
-      console.log(answer);
-      answerBank.push(answer);
-    }
-
-    for (var i = 0; i < questions.length; i++) {
-      if (questions[i].answer === answerBank[i]) {
-        console.log("correct!")
-        correct  ++
-        $("#answer").text("correct " + correct)
-      } else {
-        $("#incorrectanswer").text("incorrect " + incorrect)
-        incorrect ++
-        console.log("incorrect!");
-      }
-    }
+    displayResults();
 
   })
 
+function displayResults() {
+  clearInterval(gameInterval)
+  $(".form-element").hide();
+  for (var i = 0; i < questions.length; i++) {
+    var answer = $('input[type="radio"][name=' + i + ']:checked').attr("data-answer");
+    console.log(answer);
+    answerBank.push(answer);
+  }
 
-  newGame();
+  for (var i = 0; i < questions.length; i++) {
+    if (questions[i].answer === answerBank[i]) {
+
+      console.log("correct!")
+      correct  ++
+    } else {
+      incorrect ++
+      console.log("incorrect!");
+    }
+  }
+  $("#answer").text("correct " + correct)
+  $("#incorrectanswer").text("incorrect " + incorrect)
+
+}
+
+$(".new-game").on("click", newGame);
+newGame();
+  
 
 
 })
